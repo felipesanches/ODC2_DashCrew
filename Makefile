@@ -1,12 +1,17 @@
+DEMONAME=odc2
+ROMPATH=~/nonfree/MAME0172/ROMs/
 all: rom run
 
-rom: odc2.rom
+rom: $(DEMONAME).rom
 
-run: odc2.rom
-	o2em odc2.rom
+run: $(DEMONAME).rom
+	~/mame/mame64 -rp $(ROMPATH) -window odyssey2 -cart $(DEMONAME).rom
 
-odc2.rom: odc2.p
-	p2bin $< $@ -r \$$400-\$$fff
+debug: $(DEMONAME).rom
+	~/mame/mame64 -rp $(ROMPATH) -window odyssey2 -cart $(DEMONAME).rom -debug
+
+$(DEMONAME).rom: $(DEMONAME).p
+	p2bin $< $@ -r \$$400-\$$bff
 
 %.p: %.a48
 	asl -a -u -q -i .. $< -o $@
@@ -15,8 +20,8 @@ cos_table.inc: cos_table.py
 	python cos_table.py >$@
 
 clean:
-	rm -f odc2.p cos_table.inc
+	rm -f $(DEMONAME).p cos_table.inc
 
 # dependencies
-odc2.p: g7000.h cos_table.inc
+$(DEMONAME).p: g7000.h cos_table.inc
 
